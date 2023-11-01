@@ -28,13 +28,6 @@ task('sendToMany', 'Sends tokens to multiple addresses')
   .addParam('destchainaddr', 'Destination chain address')
   .setAction(async (taskArgs, hre) => {
     const connectedWallet = getWallet(chains[0].rpc, hre.ethers)
-    const phrase = process.env.MNEMONIC
-
-    if (!phrase) {
-      throw new Error(
-        'invalid mnemonic. Make sure the mnemonic environment variable is set.'
-      )
-    }
 
     // grab an instance of the contract
     const contract = new hre.ethers.Contract(
