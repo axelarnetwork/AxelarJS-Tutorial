@@ -9,6 +9,8 @@ First install all the dependencies
 
 The scripts to deploy the function are also written up though you will need to configure your own .env file, which will include your mnemonic used to deploy the GMPDistribution contract.
 
+For those
+
 If you do not want to go through the deployment process simply use the following addresses of the already deployed GMPDistribution contract to use with the Hardhat Task
 
 Polygon Address: `0x3F4D4fDA591244F8F38058cbd30868405A606A42`

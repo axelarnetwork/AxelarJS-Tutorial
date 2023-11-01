@@ -2,7 +2,6 @@ import dotenv from 'dotenv'
 import { task, HardhatUserConfig } from 'hardhat/config'
 import '@nomicfoundation/hardhat-toolbox'
 import chains from './chains.json'
-// import { ethers } from 'hardhat'
 import {
   AxelarGMPRecoveryAPI,
   AxelarQueryAPI,
@@ -26,14 +25,10 @@ task('sendToMany', 'Sends tokens to multiple addresses')
   .addParam('sourcechainaddr', 'Source chain address')
   .addParam('destchainaddr', 'Destination chain address')
   .setAction(async (taskArgs, hre) => {
-    // const connectedWallet = getWallet()
     const phrase = process.env.MNEMONIC
 
-    if (!phrase) {
-      throw new Error(
-        'invalid mnemonic. Make sure the mnemonic environment variable is set.'
-      )
-    }
+    if (!phrase) throw new Error('invalid mnemonic. Make sure the mnemonic environment variable is set.')
+
     const newMnemonic = hre.ethers.Mnemonic.fromPhrase(phrase)
     const path = `m/44'/60'/0'/0/1`
     const wallet = hre.ethers.HDNodeWallet.fromMnemonic(newMnemonic, path)
@@ -89,7 +84,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
       3000000,
       { value: '1000' }
     )
-    console.log('(failing) tx2 sent')
+    console.log('(intentionally failing) tx2 sent')
 
     const tx2Hash: string = tx2.hash
 
@@ -106,22 +101,26 @@ task('sendToMany', 'Sends tokens to multiple addresses')
       gasOptions
     )
 
+    if (error) console.log('error:', error)
+
     console.log('extra gas added', success)
     console.log('extra gas added tx:', transaction)
   })
 
 if (!process.env.MNEMONIC) throw ('mnemonic undefined')
 
+
 const config: HardhatUserConfig = {
   solidity: '0.8.20',
   networks: {
     polygon: {
-      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.POLYGON_ALCHEMY_KEY}`,
+      // url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.POLYGON_KEY}`,
+      url: 'https://polygon-mumbai.infura.io/v3/225f23db43804b1dbe4978dcb299fd52',
       accounts: { mnemonic: process.env.MNEMONIC },
       network_id: 80001,
     },
     avalanche: {
-      url: chains[1].rpc,
+      url: `https://api.avax-test.network/ext/bc/C/rpc`,
       accounts: { mnemonic: process.env.MNEMONIC },
       network_id: 4002,
     },
