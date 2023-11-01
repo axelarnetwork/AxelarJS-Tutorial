@@ -47,32 +47,32 @@ task('sendToMany', 'Sends tokens to multiple addresses')
       connectedWallet
     )
 
-    // // estimate gas
-    // const estimatedGasAmount = await sdkQuery.estimateGasFee(
-    //   EvmChain.POLYGON,
-    //   EvmChain.FANTOM,
-    //   'MATIC',
-    //   700000, //gasLimit
-    //   1.1, //gasMultiplier
-    //   '500000' //minGasPrice
-    // )
+    // estimate gas
+    const estimatedGasAmount = await sdkQuery.estimateGasFee(
+      EvmChain.POLYGON,
+      EvmChain.FANTOM,
+      'MATIC',
+      700000, //gasLimit
+      1.1, //gasMultiplier
+      '500000' //minGasPrice
+    )
 
 
-    // // // call sendToMany with gas passed in for it to work
-    // const tx1 = await contract.sendToMany(
-    //   EvmChain.FANTOM,
-    //   taskArgs.destchainaddr,
-    //   [
-    //     '0x03555aA97c7Ece30Afe93DAb67224f3adA79A60f',
-    //     '0xC165CbEc276C26c57F1b1Cbc499109AbeCbA4474',
-    //     '0x23f5536D2C7a8ffE66C385F9f7e53a5C86F53bD1',
-    //   ],
-    //   'aUSDC',
-    //   3000000,
-    //   { value: estimatedGasAmount.toString() }
-    // )
+    // // call sendToMany with gas passed in for it to work
+    const tx1 = await contract.sendToMany(
+      EvmChain.FANTOM,
+      taskArgs.destchainaddr,
+      [
+        '0x03555aA97c7Ece30Afe93DAb67224f3adA79A60f',
+        '0xC165CbEc276C26c57F1b1Cbc499109AbeCbA4474',
+        '0x23f5536D2C7a8ffE66C385F9f7e53a5C86F53bD1',
+      ],
+      'aUSDC',
+      3000000,
+      { value: estimatedGasAmount.toString() }
+    )
 
-    // console.log('tx1.hash', tx1.hash)
+    console.log('tx1.hash', tx1.hash)
 
 
 
@@ -109,6 +109,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
         gasOptions
       )
       tx2Status = await sdkGmpRecovery.queryTransactionStatus(tx2.hash);
+      console.log('gas status:', tx2Status.gasPaidInfo?.status)
 
       console.log('adding gas transaction:', transaction?.blockHash)
       console.log(success, 'is success')
