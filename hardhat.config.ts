@@ -23,6 +23,8 @@ const sdkQuery = new AxelarQueryAPI({ environment: Environment.TESTNET })
 // async function main(sourceChainAddr: string, destChainAddr: string) {
 
 // npx hardhat sendToMany --sourceChainAddr <sourceChainAddr> --destChainAddr <destChainAddr>
+0xBFb7E63B0D3C7232F8eEd8dBcAad3273eE0c8616
+0xdeD6d9Fa87A8607D99c1866910C987844a48c46B
 task('sendToMany', 'Sends tokens to multiple addresses')
   .addParam('sourcechainaddr', 'Source chain address')
   .addParam('destchainaddr', 'Destination chain address')
@@ -36,8 +38,9 @@ task('sendToMany', 'Sends tokens to multiple addresses')
       )
     }
     const newMnemonic = hre.ethers.Mnemonic.fromPhrase(phrase)
-    const path = `m/44'/60'/0'/0/1`
-    const wallet = hre.ethers.HDNodeWallet.fromMnemonic(newMnemonic, path)
+    // const path = `m/44'/60'/0'/0/1`
+    // const wallet = hre.ethers.HDNodeWallet.fromMnemonic(newMnemonic, path)
+    const wallet = hre.ethers.HDNodeWallet.fromMnemonic(newMnemonic)
     const provider = hre.ethers.getDefaultProvider(chains[0].rpc)
     const connectedWallet = wallet.connect(provider)
 
@@ -51,7 +54,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
     // estimate gas
     const estimatedGasAmount = await sdkQuery.estimateGasFee(
       EvmChain.POLYGON,
-      EvmChain.AVALANCHE,
+      EvmChain.FANTOM,
       'MATIC',
       700000, //gasLimit
       1.1, //gasMultiplier
@@ -60,7 +63,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
 
     // call sendToMany with gas passed in for it to work
     const tx1 = await contract.sendToMany(
-      EvmChain.AVALANCHE,
+      EvmChain.FANTOM,
       taskArgs.destchainaddr,
       [
         '0x03555aA97c7Ece30Afe93DAb67224f3adA79A60f',
@@ -79,7 +82,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
 
     // call sendToMany again with less gas then recommended and then retry on fail
     const tx2 = await contract.sendToMany(
-      EvmChain.AVALANCHE,
+      EvmChain.FANTOM,
       taskArgs.destchainaddr,
       [
         '0x03555aA97c7Ece30Afe93DAb67224f3adA79A60f',
