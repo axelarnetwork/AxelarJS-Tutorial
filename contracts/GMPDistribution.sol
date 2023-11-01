@@ -25,8 +25,6 @@ contract GMPDistribution is AxelarExecutable {
      * @param _symbol token symbol
      * @param _amount token amount
      */
-    // ["0x03555aA97c7Ece30Afe93DAb67224f3adA79A60f", "0xC165CbEc276C26c57F1b1Cbc499109AbeCbA4474", "0x23f5536D2C7a8ffE66C385F9f7e53a5C86F53bD1"]
-    //  {value: "100000000000000000"}
     function sendToMany(
         string memory _destChain,
         string memory _destContractAddr,

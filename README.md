@@ -1,13 +1,20 @@
-# Sample Hardhat Project
+# AxelarJS
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+This project demonstrates basic AxelarJS usecases in the form of a Hardhat task.
 
-Try running some of the following tasks:
+The task will interact with the contract called GMPDistribution which has already been written into the `./contracts/GMPDistribution.sol` folder.
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
+First install all the dependencies
+`npm i`
+
+**_The scripts to deploy the function are also written up though you will need to configure your own .env file as follows_**
+
+The contract is already deployed on the Polygon and Avalanche blockchains
+Polygon Address: `0x3F4D4fDA591244F8F38058cbd30868405A606A42`
+Avalanche Address: `0xBEEfaAD92d9e46672629D5425A60F79e4f078181`
+
+To run the task simply run
+
+```
+npx hardhat sendToMany --sourcechainaddr 0x3F4D4fDA591244F8F38058cbd30868405A606A42 --destchainaddr 0xBEEfaAD92d9e46672629D5425A60F79e4f078181
 ```

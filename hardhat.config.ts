@@ -20,9 +20,6 @@ const sdkGmpRecovery = new AxelarGMPRecoveryAPI({
 
 const sdkQuery = new AxelarQueryAPI({ environment: Environment.TESTNET })
 
-// async function main(sourceChainAddr: string, destChainAddr: string) {
-
-// npx hardhat sendToMany --sourceChainAddr <sourceChainAddr> --destChainAddr <destChainAddr>
 task('sendToMany', 'Sends tokens to multiple addresses')
   .addParam('sourcechainaddr', 'Source chain address')
   .addParam('destchainaddr', 'Destination chain address')
@@ -75,7 +72,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
     const tx1Hash: string = tx1.hash
 
     const tx1Status = await sdkGmpRecovery.queryTransactionStatus(tx1Hash) //takes some time for this to be available
-    console.log('tx1 stats:', tx1Status.status)
+    console.log('tx1 sent:', tx1Status.status)
 
     // call sendToMany again with less gas then recommended and then retry on fail
     const tx2 = await contract.sendToMany(
@@ -90,6 +87,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
       3000000,
       { value: '1000' }
     )
+    console.log('(failing) tx2 sent')
 
     const tx2Hash: string = tx2.hash
 
@@ -106,20 +104,21 @@ task('sendToMany', 'Sends tokens to multiple addresses')
       gasOptions
     )
 
-    console.log(success, 'is success')
+    console.log('extra gas added', success)
+    console.log('extra gas added tx:', transaction)
   })
 
 const config: HardhatUserConfig = {
   solidity: '0.8.20',
   networks: {
     polygon: {
-      url: chains[0].rpc,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.POLYGON_KEY}`,
+      accounts: { mnemonic: process.env.MNEMONIC },
       network_id: 80001,
     },
-    fantom: {
-      url: chains[1].rpc,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+    avalanche: {
+      url: `https://api.avax-test.network/ext/bc/C/rpc`,
+      accounts: { mnemonic: process.env.MNEMONIC },
       network_id: 4002,
     },
   },
