@@ -109,13 +109,14 @@ task('sendToMany', 'Sends tokens to multiple addresses')
     console.log(success, 'is success')
   })
 
+if (!process.env.MNEMONIC) throw ('undefined mnemonic')
+
 const config: HardhatUserConfig = {
   solidity: '0.8.20',
   networks: {
     polygon: {
-      // url: chains[0].rpc,
       url: 'https://polygon-mumbai.g.alchemy.com/v2/Ksd4J1QVWaOJAJJNbr_nzTcJBJU-6uP3',
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: { mnemonic: process.env.MNEMONIC },
       network_id: 80001,
     },
     fantom: {
