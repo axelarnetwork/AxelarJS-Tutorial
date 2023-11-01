@@ -7,9 +7,10 @@ The task will interact with the contract called GMPDistribution which has alread
 First install all the dependencies
 `npm i`
 
-**_The scripts to deploy the function are also written up though you will need to configure your own .env file as follows_**
+The scripts to deploy the function are also written up though you will need to configure your own .env file, which will include your mnemonic used to deploy the GMPDistribution contract.
 
-The contract is already deployed on the Polygon and Avalanche blockchains
+If you do not want to go through the deployment process simply use the following addresses of the already deployed GMPDistribution contract to use with the Hardhat Task
+
 Polygon Address: `0x3F4D4fDA591244F8F38058cbd30868405A606A42`
 Avalanche Address: `0xBEEfaAD92d9e46672629D5425A60F79e4f078181`
 
