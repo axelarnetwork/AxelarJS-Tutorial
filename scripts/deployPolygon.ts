@@ -10,6 +10,7 @@ import { getWallet } from '../utils/getWallet'
 async function main() {
 
   const connectedWallet = getWallet(chains[0].rpc)
+
   const gmpDistribution = await ethers.deployContract('GMPDistribution', [
     chains[0].gateway,
     chains[0].gasService,
