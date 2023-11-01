@@ -38,9 +38,8 @@ task('sendToMany', 'Sends tokens to multiple addresses')
       )
     }
     const newMnemonic = hre.ethers.Mnemonic.fromPhrase(phrase)
-    const path = `m/44'/60'/0'/0/1`
-    const wallet = hre.ethers.HDNodeWallet.fromMnemonic(newMnemonic, path)
-    const provider = hre.ethers.getDefaultProvider(chains[1].rpc)
+    const wallet = hre.ethers.HDNodeWallet.fromMnemonic(newMnemonic)
+    const provider = hre.ethers.getDefaultProvider(chains[0].rpc)
     const connectedWallet = wallet.connect(provider)
 
     // grab an instance of the contract
@@ -52,9 +51,9 @@ task('sendToMany', 'Sends tokens to multiple addresses')
 
     // estimate gas
     const estimatedGasAmount = await sdkQuery.estimateGasFee(
-      EvmChain.FANTOM,
       EvmChain.POLYGON,
-      'FTM',
+      EvmChain.FANTOM,
+      'MATIC',
       700000, //gasLimit
       1.1, //gasMultiplier
       '500000' //minGasPrice
@@ -63,7 +62,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
 
     // call sendToMany with gas passed in for it to work
     const tx1 = await contract.sendToMany(
-      EvmChain.POLYGON,
+      EvmChain.FANTOM,
       taskArgs.destchainaddr,
       [
         '0x03555aA97c7Ece30Afe93DAb67224f3adA79A60f',
