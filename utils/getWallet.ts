@@ -1,6 +1,4 @@
-import { ethers } from 'hardhat'
-
-export const getWallet = (rpc: string) => {
+export const getWallet = (rpc: string, ethers: any) => {
   const phrase = process.env.MNEMONIC
 
   if (!phrase) throw new Error('invalid mnemonic. Make sure the mnemonic environment variable is set.')

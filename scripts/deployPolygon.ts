@@ -9,7 +9,7 @@ import { getWallet } from '../utils/getWallet'
 // not running for multiple chains i need to run manually for each chain still
 async function main() {
 
-  const connectedWallet = getWallet(chains[0].rpc)
+  const connectedWallet = getWallet(chains[0].rpc, ethers)
 
   const gmpDistribution = await ethers.deployContract('GMPDistribution', [
     chains[0].gateway,

@@ -12,6 +12,7 @@ import {
   GMPStatus
 } from '@axelar-network/axelarjs-sdk'
 import GMPDistribution from './artifacts/contracts/GMPDistribution.sol/GMPDistribution.json'
+import { getWallet } from './utils/getWallet'
 
 dotenv.config()
 
@@ -21,12 +22,12 @@ const sdkGmpRecovery = new AxelarGMPRecoveryAPI({
 
 const sdkQuery = new AxelarQueryAPI({ environment: Environment.TESTNET })
 
-// npx hardhat sendToMany --sourcechainaddr 0x61c0Bd208a2df73B612FD5e0899eB50970F61665 --destchainaddr 0xB90C8b78c8E0D056A05A512b61CBD81bBE8552f8
+// npx hardhat sendToMany --sourcechainaddr 0x261AD0f73B0062Fb5340e95861dF3EB9c1Fc6aD4 --destchainaddr 0x6bCA5a0B528333E824f0651d13e71A4343C1a5Bb
 task('sendToMany', 'Sends tokens to multiple addresses')
   .addParam('sourcechainaddr', 'Source chain address')
   .addParam('destchainaddr', 'Destination chain address')
   .setAction(async (taskArgs, hre) => {
-    // const connectedWallet = getWallet()
+    const connectedWallet = getWallet(chains[0].rpc, hre.ethers)
     const phrase = process.env.MNEMONIC
 
     if (!phrase) {
@@ -34,11 +35,6 @@ task('sendToMany', 'Sends tokens to multiple addresses')
         'invalid mnemonic. Make sure the mnemonic environment variable is set.'
       )
     }
-    const newMnemonic = hre.ethers.Mnemonic.fromPhrase(phrase)
-    const path = `m/44'/60'/0'/0/1`
-    const wallet = hre.ethers.HDNodeWallet.fromMnemonic(newMnemonic, path)
-    const provider = hre.ethers.getDefaultProvider(chains[0].rpc)
-    const connectedWallet = wallet.connect(provider)
 
     // grab an instance of the contract
     const contract = new hre.ethers.Contract(
