@@ -23,8 +23,8 @@ const sdkQuery = new AxelarQueryAPI({ environment: Environment.TESTNET })
 // async function main(sourceChainAddr: string, destChainAddr: string) {
 
 // npx hardhat sendToMany --sourceChainAddr <sourceChainAddr> --destChainAddr <destChainAddr>
-0xB0aAe8BBb16eE41Ad85C6C60647C649CDDC0af6c
-0x3FfE329A6d8334AD216a4634235Ce0F306E2aabe
+0xB90C8b78c8E0D056A05A512b61CBD81bBE8552f8
+0x61c0Bd208a2df73B612FD5e0899eB50970F61665
 task('sendToMany', 'Sends tokens to multiple addresses')
   .addParam('sourcechainaddr', 'Source chain address')
   .addParam('destchainaddr', 'Destination chain address')
@@ -38,9 +38,8 @@ task('sendToMany', 'Sends tokens to multiple addresses')
       )
     }
     const newMnemonic = hre.ethers.Mnemonic.fromPhrase(phrase)
-    // const path = `m/44'/60'/0'/0/1`
-    // const wallet = hre.ethers.HDNodeWallet.fromMnemonic(newMnemonic, path)
-    const wallet = hre.ethers.HDNodeWallet.fromMnemonic(newMnemonic)
+    const path = `m/44'/60'/0'/0/1`
+    const wallet = hre.ethers.HDNodeWallet.fromMnemonic(newMnemonic, path)
     const provider = hre.ethers.getDefaultProvider(chains[1].rpc)
     const connectedWallet = wallet.connect(provider)
 
