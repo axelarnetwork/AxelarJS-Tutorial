@@ -23,8 +23,8 @@ const sdkQuery = new AxelarQueryAPI({ environment: Environment.TESTNET })
 // async function main(sourceChainAddr: string, destChainAddr: string) {
 
 // npx hardhat sendToMany --sourceChainAddr <sourceChainAddr> --destChainAddr <destChainAddr>
-0xBFb7E63B0D3C7232F8eEd8dBcAad3273eE0c8616
-0xdeD6d9Fa87A8607D99c1866910C987844a48c46B
+0xB0aAe8BBb16eE41Ad85C6C60647C649CDDC0af6c
+0x3FfE329A6d8334AD216a4634235Ce0F306E2aabe
 task('sendToMany', 'Sends tokens to multiple addresses')
   .addParam('sourcechainaddr', 'Source chain address')
   .addParam('destchainaddr', 'Destination chain address')
@@ -41,7 +41,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
     // const path = `m/44'/60'/0'/0/1`
     // const wallet = hre.ethers.HDNodeWallet.fromMnemonic(newMnemonic, path)
     const wallet = hre.ethers.HDNodeWallet.fromMnemonic(newMnemonic)
-    const provider = hre.ethers.getDefaultProvider(chains[0].rpc)
+    const provider = hre.ethers.getDefaultProvider(chains[1].rpc)
     const connectedWallet = wallet.connect(provider)
 
     // grab an instance of the contract
@@ -53,63 +53,73 @@ task('sendToMany', 'Sends tokens to multiple addresses')
 
     // estimate gas
     const estimatedGasAmount = await sdkQuery.estimateGasFee(
-      EvmChain.POLYGON,
       EvmChain.FANTOM,
-      'MATIC',
+      EvmChain.POLYGON,
+      'FTM',
       700000, //gasLimit
       1.1, //gasMultiplier
       '500000' //minGasPrice
     )
 
+
     // call sendToMany with gas passed in for it to work
     const tx1 = await contract.sendToMany(
-      EvmChain.FANTOM,
-      taskArgs.destchainaddr,
-      [
-        '0x03555aA97c7Ece30Afe93DAb67224f3adA79A60f',
-        '0xC165CbEc276C26c57F1b1Cbc499109AbeCbA4474',
-        '0x23f5536D2C7a8ffE66C385F9f7e53a5C86F53bD1',
-      ],
-      'aUSDC',
-      3000000,
-      { value: estimatedGasAmount.toString() }
-    )
-
-    const tx1Hash: string = tx1.hash
-
-    const tx1Status = await sdkGmpRecovery.queryTransactionStatus(tx1Hash) //takes some time for this to be available
-    console.log('tx1 stats:', tx1Status.status)
-
-    // call sendToMany again with less gas then recommended and then retry on fail
-    const tx2 = await contract.sendToMany(
-      EvmChain.FANTOM,
-      taskArgs.destchainaddr,
-      [
-        '0x03555aA97c7Ece30Afe93DAb67224f3adA79A60f',
-        '0xC165CbEc276C26c57F1b1Cbc499109AbeCbA4474',
-        '0x23f5536D2C7a8ffE66C385F9f7e53a5C86F53bD1',
-      ],
-      'aUSDC',
-      3000000,
-      { value: '1000' }
-    )
-
-    const tx2Hash: string = tx2.hash
-
-    const gasOptions: AddGasOptions = {
-      evmWalletDetails: {
-        useWindowEthereum: false,
-        privateKey: connectedWallet.privateKey,
-      },
-    }
-
-    const { success, transaction, error } = await sdkGmpRecovery.addNativeGas(
       EvmChain.POLYGON,
-      tx2Hash,
-      gasOptions
+      taskArgs.destchainaddr,
+      [
+        '0x03555aA97c7Ece30Afe93DAb67224f3adA79A60f',
+        '0xC165CbEc276C26c57F1b1Cbc499109AbeCbA4474',
+        '0x23f5536D2C7a8ffE66C385F9f7e53a5C86F53bD1',
+      ],
+      'aUSDC',
+      3000000,
+      // { value: estimatedGasAmount.toString() }
+      { value: '1000000000000000000' }
     )
 
-    console.log(success, 'is success')
+    // const tx1Hash: string = tx1.hash
+
+    // const tx1Status = await sdkGmpRecovery.queryTransactionStatus(tx1Hash) //takes some time for this to be available
+    // console.log('tx1 stats:', tx1Status.status)
+
+    // // call sendToMany again with less gas then recommended and then retry on fail
+    // const tx2 = await contract.sendToMany(
+    //   EvmChain.POLYGON,
+    //   taskArgs.destchainaddr,
+    //   [
+    //     '0x03555aA97c7Ece30Afe93DAb67224f3adA79A60f',
+    //     '0xC165CbEc276C26c57F1b1Cbc499109AbeCbA4474',
+    //     '0x23f5536D2C7a8ffE66C385F9f7e53a5C86F53bD1',
+    //   ],
+    //   'aUSDC',
+    //   3000000,
+    //   { value: '1000' }
+    // )
+
+    // console.log('(intentionally failing) tx2 sent', tx2.hash)
+
+    // const tx2Hash: string = tx2.hash
+
+    // const gasOptions: AddGasOptions = {
+    //   evmWalletDetails: {
+    //     useWindowEthereum: false,
+    //     privateKey: connectedWallet.privateKey,
+    //   },
+    // }
+
+    // console.log(tx2Hash, 'the hash we need')
+
+    // const { success, transaction, error } = await sdkGmpRecovery.addNativeGas(
+    //   EvmChain.FANTOM,
+    //   tx2Hash,
+    //   gasOptions
+    // )
+
+    // if (error) console.log('error:', error)
+
+
+    // console.log('gas added:', transaction?.blockHash)
+    // console.log(success, 'is success')
   })
 
 if (!process.env.MNEMONIC) throw ('undefined mnemonic')
@@ -124,7 +134,7 @@ const config: HardhatUserConfig = {
     },
     fantom: {
       url: chains[1].rpc,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: { mnemonic: process.env.MNEMONIC },
       network_id: 4002,
     },
   },
