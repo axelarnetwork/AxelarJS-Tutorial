@@ -48,21 +48,21 @@ task('sendToMany', 'Sends tokens to multiple addresses')
     )
 
 
-    // // call sendToMany with gas passed in for it to work
-    // const tx1 = await contract.sendToMany(
-    //   EvmChain.FANTOM,
-    //   taskArgs.destchainaddr,
-    //   [
-    //     '0x03555aA97c7Ece30Afe93DAb67224f3adA79A60f',
-    //     '0xC165CbEc276C26c57F1b1Cbc499109AbeCbA4474',
-    //     '0x23f5536D2C7a8ffE66C385F9f7e53a5C86F53bD1',
-    //   ],
-    //   GasToken.aUSDC,
-    //   3000000,
-    //   { value: estimatedGasAmount.toString() }
-    // )
+    // call sendToMany with gas passed in for it to work
+    const tx1 = await contract.sendToMany(
+      EvmChain.FANTOM,
+      taskArgs.destchainaddr,
+      [
+        '0x03555aA97c7Ece30Afe93DAb67224f3adA79A60f',
+        '0xC165CbEc276C26c57F1b1Cbc499109AbeCbA4474',
+        '0x23f5536D2C7a8ffE66C385F9f7e53a5C86F53bD1',
+      ],
+      GasToken.aUSDC,
+      3000000,
+      { value: estimatedGasAmount.toString() }
+    )
 
-    // console.log('tx1.hash', tx1.hash)
+    console.log('tx1.hash', tx1.hash)
 
 
 
@@ -77,7 +77,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
       ],
       GasToken.aUSDC,
       3000000,
-      { value: '1000' }
+      { value: '1000000' }
     )
 
     console.log('tx2 sent:', tx2.hash)
@@ -94,7 +94,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
 
     while (tx2Status.status == GMPStatus.CANNOT_FETCH_STATUS) {
       tx2Status = await sdkGmpRecovery.queryTransactionStatus(tx2.hash);
-      if (tx2Status.gasPaidInfo?.status != GasPaidStatus.GAS_PAID_NOT_ENOUGH_GAS) {
+      if (tx2Status.gasPaidInfo?.status == GasPaidStatus.GAS_UNPAID) {
 
         const { success, transaction } = await sdkGmpRecovery.addNativeGas(
           EvmChain.POLYGON,
