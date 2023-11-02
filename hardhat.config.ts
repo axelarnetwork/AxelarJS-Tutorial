@@ -2,14 +2,14 @@ import dotenv from 'dotenv'
 import { task, HardhatUserConfig } from 'hardhat/config'
 import '@nomicfoundation/hardhat-toolbox'
 import chains from './chains.json'
-// import { ethers } from 'hardhat'
 import {
   AxelarGMPRecoveryAPI,
   AxelarQueryAPI,
   Environment,
   EvmChain,
   AddGasOptions,
-  GMPStatus
+  GMPStatus,
+  GasToken
 } from '@axelar-network/axelarjs-sdk'
 import GMPDistribution from './artifacts/contracts/GMPDistribution.sol/GMPDistribution.json'
 import { getWallet } from './utils/getWallet'
@@ -40,14 +40,14 @@ task('sendToMany', 'Sends tokens to multiple addresses')
     const estimatedGasAmount = await sdkQuery.estimateGasFee(
       EvmChain.POLYGON,
       EvmChain.FANTOM,
-      'MATIC',
+      GasToken.MATIC,
       700000, //gasLimit
       1.1, //gasMultiplier
       '500000' //minGasPrice
     )
 
 
-    // // call sendToMany with gas passed in for it to work
+    // call sendToMany with gas passed in for it to work
     const tx1 = await contract.sendToMany(
       EvmChain.FANTOM,
       taskArgs.destchainaddr,
@@ -56,7 +56,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
         '0xC165CbEc276C26c57F1b1Cbc499109AbeCbA4474',
         '0x23f5536D2C7a8ffE66C385F9f7e53a5C86F53bD1',
       ],
-      'aUSDC',
+      GasToken.aUSDC,
       3000000,
       { value: estimatedGasAmount.toString() }
     )
@@ -74,7 +74,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
         '0xC165CbEc276C26c57F1b1Cbc499109AbeCbA4474',
         '0x23f5536D2C7a8ffE66C385F9f7e53a5C86F53bD1',
       ],
-      'aUSDC',
+      GasToken.aUSDC,
       3000000,
       { value: '1000' }
     )
@@ -92,16 +92,20 @@ task('sendToMany', 'Sends tokens to multiple addresses')
     tx2Status = await sdkGmpRecovery.queryTransactionStatus(tx2.hash) //takes some time for this to be available
 
     while (tx2Status.status == GMPStatus.CANNOT_FETCH_STATUS) {
-      const { success, transaction } = await sdkGmpRecovery.addNativeGas(
-        EvmChain.POLYGON,
-        tx2.hash,
-        gasOptions
-      )
       tx2Status = await sdkGmpRecovery.queryTransactionStatus(tx2.hash);
-      console.log('gas status:', tx2Status.gasPaidInfo?.status)
+      console.log('tx2Status:', tx2Status)
+      if (tx2Status.status != GMPStatus.CANNOT_FETCH_STATUS) {
 
-      console.log('adding gas transaction:', transaction?.blockHash)
-      console.log(success, 'is success')
+        const { success, transaction } = await sdkGmpRecovery.addNativeGas(
+          EvmChain.POLYGON,
+          tx2.hash,
+          gasOptions
+        )
+        console.log('gas status:', tx2Status.gasPaidInfo?.status)
+
+        console.log('adding gas transaction:', transaction?.blockHash)
+        console.log(success, 'is success')
+      }
     }
 
 
