@@ -1,7 +1,6 @@
 import dotenv from 'dotenv'
 import { task, HardhatUserConfig } from 'hardhat/config'
 import '@nomicfoundation/hardhat-toolbox'
-import DistributionExecutable from './artifacts/contracts/DistributionExecutable.sol/DistributionExecutable.json'
 
 dotenv.config()
 
