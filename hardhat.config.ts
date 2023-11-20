@@ -12,7 +12,7 @@ import {
   GasToken,
   GasPaidStatus,
 } from '@axelar-network/axelarjs-sdk'
-import GMPDistribution from './artifacts/contracts/GMPDistribution.sol/GMPDistribution.json'
+import GMPDistribution from './artifacts/contracts/DistributionExecutable.sol/DistributionExecutable.json'
 import { getWallet } from './utils/getWallet'
 
 dotenv.config()
