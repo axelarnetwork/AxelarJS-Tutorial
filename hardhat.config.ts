@@ -10,7 +10,7 @@ import {
   AddGasOptions,
   GMPStatus,
   GasToken,
-  GasPaidStatus
+  GasPaidStatus,
 } from '@axelar-network/axelarjs-sdk'
 import GMPDistribution from './artifacts/contracts/GMPDistribution.sol/GMPDistribution.json'
 import { getWallet } from './utils/getWallet'
@@ -44,7 +44,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
       GasToken.MATIC,
       700000, //gasLimit
       1.1, //gasMultiplier
-      '500000' //minGasPrice
+      '500000', //minGasPrice
     )
 
 
@@ -59,7 +59,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
       ],
       GasToken.aUSDC,
       3000000,
-      { value: estimatedGasAmount.toString() }
+      { value: estimatedGasAmount }
     )
 
     console.log('tx1.hash', tx1.hash)
@@ -77,7 +77,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
       ],
       GasToken.aUSDC,
       3000000,
-      { value: '1000000' }
+      { value: '1000' }
     )
 
     console.log('tx2 sent:', tx2.hash)
@@ -86,7 +86,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
     const gasOptions: AddGasOptions = {
       evmWalletDetails: {
         privateKey: connectedWallet.privateKey,
-      },
+      }
     }
 
     let tx2Status
