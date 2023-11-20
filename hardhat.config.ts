@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { task, HardhatUserConfig } from 'hardhat/config'
 import '@nomicfoundation/hardhat-toolbox'
-import GMPDistribution from './artifacts/contracts/GMPDistribution.sol/GMPDistribution.json'
+import DistributionExecutable from './artifacts/contracts/DistributionExecutable.sol/DistributionExecutable.json'
 
 dotenv.config()
 
