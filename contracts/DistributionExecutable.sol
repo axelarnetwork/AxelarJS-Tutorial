@@ -7,7 +7,7 @@ import {AxelarExecutable} from "@axelar-network/axelar-gmp-sdk-solidity/contract
 import {IAxelarGateway} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGateway.sol";
 import {IAxelarGasService} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol";
 
-contract GMPDistribution is AxelarExecutable {
+contract DistributionExecutable is AxelarExecutable {
     IAxelarGasService public immutable gasService;
 
     constructor(
