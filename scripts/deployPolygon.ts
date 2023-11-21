@@ -11,7 +11,7 @@ async function main() {
 
   const connectedWallet = getWallet(chains[0].rpc, ethers)
 
-  const gmpDistribution = await ethers.deployContract('GMPDistribution', [
+  const distributionExecutable = await ethers.deployContract('DistributionExecutable', [
     chains[0].gateway,
     chains[0].gasService,
   ])
@@ -22,11 +22,11 @@ async function main() {
     connectedWallet
   )
 
-  await gmpDistribution.waitForDeployment()
+  await distributionExecutable.waitForDeployment()
 
-  await mockERC20.approve(gmpDistribution.target, '1234567895')
+  await mockERC20.approve(distributionExecutable.target, '1234567895')
 
-  console.log(`polygon contract address: ${gmpDistribution.target}`)
+  console.log(`polygon contract address: ${distributionExecutable.target}`)
 }
 
 

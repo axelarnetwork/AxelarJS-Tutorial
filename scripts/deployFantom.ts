@@ -8,7 +8,7 @@ import { getWallet } from '../utils/getWallet'
 async function main() {
 
     const connectedWallet = getWallet(chains[1].rpc, ethers)
-    const gmpDistribution = await ethers.deployContract('GMPDistribution', [
+    const distributionExecutable = await ethers.deployContract('DistributionExecutable', [
         chains[1].gateway,
         chains[1].gasService,
     ])
@@ -19,11 +19,11 @@ async function main() {
         connectedWallet
     )
 
-    await gmpDistribution.waitForDeployment()
+    await distributionExecutable.waitForDeployment()
 
-    await mockERC20.approve(gmpDistribution.target, '1234567895')
+    await mockERC20.approve(distributionExecutable.target, '1234567895')
 
-    console.log(`fantom contract address: ${gmpDistribution.target}`)
+    console.log(`fantom contract address: ${distributionExecutable.target}`)
 }
 
 

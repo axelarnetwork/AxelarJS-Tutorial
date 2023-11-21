@@ -11,7 +11,7 @@ async function main() {
     const avalancheAUSDC = '0x75Cc4fDf1ee3E781C1A3Ee9151D5c6Ce34Cf5C61'
 
 
-    const gmpDistribution = await ethers.deployContract('GMPDistribution', [
+    const distributionExecutable = await ethers.deployContract('DistributionExecutable', [
         avalancheGateway,
         avalancheGasService,
     ])
@@ -22,11 +22,11 @@ async function main() {
         connectedWallet
     )
 
-    await gmpDistribution.waitForDeployment()
+    await distributionExecutable.waitForDeployment()
 
-    await mockERC20.approve(gmpDistribution.target, '1234567895')
+    await mockERC20.approve(distributionExecutable.target, '1234567895')
 
-    console.log(`Avalanche contract address: ${gmpDistribution.target}`)
+    console.log(`Avalanche contract address: ${distributionExecutable.target}`)
 }
 
 
