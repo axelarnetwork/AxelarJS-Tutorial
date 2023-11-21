@@ -11,7 +11,7 @@ async function main() {
     const polygonAUSDC = '0x2c852e740B62308c46DD29B982FBb650D063Bd07'
 
 
-    const gmpDistribution = await ethers.deployContract('GMPDistribution', [
+    const distributionExecutable = await ethers.deployContract('DistributionExecutable', [
         polygonGateway,
         polygonGasService,
     ])
@@ -22,11 +22,11 @@ async function main() {
         connectedWallet
     )
 
-    await gmpDistribution.waitForDeployment()
+    await distributionExecutable.waitForDeployment()
 
-    await mockERC20.approve(gmpDistribution.target, '1234567895')
+    await mockERC20.approve(distributionExecutable.target, '1234567895')
 
-    console.log(`Polygon mumbai contract address: ${gmpDistribution.target}`)
+    console.log(`Polygon mumbai contract address: ${distributionExecutable.target}`)
 }
 
 
