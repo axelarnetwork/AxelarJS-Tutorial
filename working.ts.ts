@@ -4,52 +4,52 @@ import '@nomicfoundation/hardhat-toolbox'
 import chains from './chains.json'
 import { getWallet } from './utils/getWallet'
 import {
+  AxelarGMPRecoveryAPI,
   AxelarQueryAPI,
   Environment,
   EvmChain,
   AddGasOptions,
-  GasToken,
-  AxelarGMPRecoveryAPI,
-  GasPaidStatus,
   GMPStatus,
+  GasToken,
+  GasPaidStatus,
 } from '@axelar-network/axelarjs-sdk'
 import GMPDistribution from './artifacts/contracts/DistributionExecutable.sol/DistributionExecutable.json'
 
 dotenv.config()
-
 const sdkQuery = new AxelarQueryAPI({ environment: Environment.TESTNET })
 
 const sdkGmpRecovery = new AxelarGMPRecoveryAPI({
   environment: Environment.TESTNET,
 })
 
-// npx hardhat sendToMany --sourcechainaddr 0x68474f4c8124ec22940Ca3a682C862C8447dA6b6 --destchainaddr 0x69aBe660cB7b4C5Bfb7c47Ff6B02d5294DA7Ce19
-task('sendToMany', 'Send tokens across chain using axelarjs')
-  .addParam('sourcechainaddr', 'The source chain address')
-  .addParam('destchainaddr', 'The destination chain address')
+// npx hardhat sendToMany --sourcechainaddr 0x261AD0f73B0062Fb5340e95861dF3EB9c1Fc6aD4 --destchainaddr 0x6bCA5a0B528333E824f0651d13e71A4343C1a5Bb
+task('sendToMany', 'Sends tokens to multiple addresses')
+  .addParam('sourcechainaddr', 'Source chain address')
+  .addParam('destchainaddr', 'Destination chain address')
   .setAction(async (taskArgs, hre) => {
     console.log("Let's do this!")
     const connectedWallet = getWallet(chains[0].rpc, hre.ethers)
 
+    // grab an instance of the contract
     const contract = new hre.ethers.Contract(
       taskArgs.sourcechainaddr,
       GMPDistribution.abi,
       connectedWallet
     )
 
+    // estimate gas
     const estimatedGasAmount = await sdkQuery.estimateGasFee(
       EvmChain.POLYGON,
       EvmChain.FANTOM,
       GasToken.MATIC,
-      700000,
-      1.1,
-      '500000'
+      700000, //gasLimit
+      1.1, //gasMultiplier
+      '500000' //minGasPrice
     )
-
-
 
     console.log(estimatedGasAmount, 'estimated')
 
+    // call sendToMany with gas passed in for it to work
     const tx1 = await contract.sendToMany(
       EvmChain.FANTOM,
       taskArgs.destchainaddr,
@@ -63,9 +63,9 @@ task('sendToMany', 'Send tokens across chain using axelarjs')
       { value: estimatedGasAmount }
     )
 
-
     console.log('tx1.hash', tx1.hash)
 
+    // call sendToMany again with less gas then recommended and then retry on fail
     const tx2 = await contract.sendToMany(
       EvmChain.FANTOM,
       taskArgs.destchainaddr,
@@ -78,37 +78,36 @@ task('sendToMany', 'Send tokens across chain using axelarjs')
       3000000,
       { value: '1000' }
     )
+    console.log('(intentionally failing) tx2 sent')
 
-    let tx2Status
-    tx2Status = await sdkGmpRecovery.queryTransactionStatus(tx2.hash)
-    console.log('tx2.hash', tx2.hash)
+    console.log('tx2 sent:', tx2.hash)
 
     const gasOptions: AddGasOptions = {
       evmWalletDetails: {
         privateKey: connectedWallet.privateKey,
-      }
+      },
     }
 
-    while (tx2Status.status == GMPStatus.CANNOT_FETCH_STATUS || GasPaidStatus.GAS_UNPAID) {
+    let tx2Status
+    tx2Status = await sdkGmpRecovery.queryTransactionStatus(tx2.hash) //takes some time for this to be available
+
+    while (tx2Status.status == GMPStatus.CANNOT_FETCH_STATUS) {
       tx2Status = await sdkGmpRecovery.queryTransactionStatus(tx2.hash)
-      console.log(tx2Status.gasPaidInfo?.status, 'status')
-      if (tx2Status.gasPaidInfo?.status == GasPaidStatus.GAS_PAID_NOT_ENOUGH_GAS) {
-        console.log("inside if statement")
+      if (tx2Status.gasPaidInfo?.status == GasPaidStatus.GAS_UNPAID) {
         const { success, transaction } = await sdkGmpRecovery.addNativeGas(
           EvmChain.POLYGON,
           tx2.hash,
           gasOptions
         )
-
         console.log('gas status:', tx2Status.gasPaidInfo?.status)
+
         console.log('adding gas transaction:', transaction?.blockHash)
         console.log(success, 'is success')
-        break;
       }
     }
-  });
+  })
 
-if (!process.env.MNEMONIC) throw 'mnemonic undefined'
+if (!process.env.MNEMONIC) throw 'undefined mnemonic'
 
 const config: HardhatUserConfig = {
   solidity: '0.8.20',
@@ -116,12 +115,12 @@ const config: HardhatUserConfig = {
     polygon: {
       url: 'https://polygon-mumbai.g.alchemy.com/v2/Ksd4J1QVWaOJAJJNbr_nzTcJBJU-6uP3',
       accounts: { mnemonic: process.env.MNEMONIC },
-      chainId: 80001,
+      network_id: 80001,
     },
     fantom: {
       url: chains[1].rpc,
       accounts: { mnemonic: process.env.MNEMONIC },
-      chainId: chains[1].chainId,
+      network_id: 4002,
     },
   },
 }
