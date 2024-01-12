@@ -74,8 +74,10 @@ task("sendToMany", "Send tokens across chain using axelarjs")
       }
     }
 
-    while (tx2Status.status == GMPStatus.CANNOT_FETCH_STATUS) {
-      if (tx2Status.gasPaidInfo?.status == GasPaidStatus.GAS_UNPAID) {
+    while (tx2Status.status == GMPStatus.CANNOT_FETCH_STATUS || GasPaidStatus.GAS_UNPAID) {
+      tx2Status = await sdkGmpRecovery.queryTransactionStatus(tx2.hash)
+      console.log(tx2Status.gasPaidInfo?.status, 'status')
+      if (tx2Status.gasPaidInfo?.status == GasPaidStatus.GAS_PAID_NOT_ENOUGH_GAS) {
         console.log("inside if statement")
         const { success, transaction } = await sdkGmpRecovery.addNativeGas(
           EvmChain.POLYGON,
