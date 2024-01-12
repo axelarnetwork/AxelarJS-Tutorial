@@ -36,6 +36,10 @@ task("sendToMany", "Send tokens across chain using axelarjs")
       '500000'
     )
 
+    console.log(estimatedGasAmount, 'estimated')
+      console.log(taskArgs.destchainaddr)
+      console.log(GasToken.aUSDC)
+
     const tx1 = await contract.sendToMany(
       EvmChain.FANTOM,
       taskArgs.destchainaddr,
