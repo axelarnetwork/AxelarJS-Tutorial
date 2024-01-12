@@ -8,7 +8,7 @@
     "@axelar-network/axelar-cgp-solidity": "^6.2.0",
     "@axelar-network/axelar-gmp-sdk-solidity": "^5.5.2",
     "@axelar-network/axelar-local-dev": "^2.1.1",
-    "@axelar-network/axelarjs-sdk": "^0.13.6",
+    "@axelar-network/axelarjs-sdk": "^0.13.9",
     "@openzeppelin/contracts": "^5.0.0",
     "dotenv": "^16.3.1"
   }
