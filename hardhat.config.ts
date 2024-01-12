@@ -40,7 +40,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
     // estimate gas
     const estimatedGasAmount = await sdkQuery.estimateGasFee(
       EvmChain.POLYGON,
-      EvmChain.FANTOM,
+      EvmChain.SEPOLIA,
       GasToken.MATIC,
       700000, //gasLimit
       1.1, //gasMultiplier
@@ -50,7 +50,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
 
     // call sendToMany with gas passed in for it to work
     const tx1 = await contract.sendToMany(
-      EvmChain.FANTOM,
+      EvmChain.SEPOLIA,
       taskArgs.destchainaddr,
       [
         '0x03555aA97c7Ece30Afe93DAb67224f3adA79A60f',
@@ -68,7 +68,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
 
     // call sendToMany again with less gas then recommended and then retry on fail
     const tx2 = await contract.sendToMany(
-      EvmChain.POLYGON,
+      EvmChain.SEPOLIA,
       taskArgs.destchainaddr,
       [
         '0x03555aA97c7Ece30Afe93DAb67224f3adA79A60f',
@@ -102,6 +102,7 @@ task('sendToMany', 'Sends tokens to multiple addresses')
           tx2.hash,
           gasOptions
         )
+
         console.log('gas status:', tx2Status.gasPaidInfo?.status)
 
         console.log('adding gas transaction:', transaction?.blockHash)
@@ -121,12 +122,12 @@ const config: HardhatUserConfig = {
     polygon: {
       url: 'https://polygon-mumbai.g.alchemy.com/v2/Ksd4J1QVWaOJAJJNbr_nzTcJBJU-6uP3',
       accounts: { mnemonic: process.env.MNEMONIC },
-      network_id: 80001,
+      chainId: 80001,
     },
-    fantom: {
+    SEPOLIA: {
       url: chains[1].rpc,
       accounts: { mnemonic: process.env.MNEMONIC },
-      network_id: 4002,
+      chainId: chains[1].chainId,
     },
   },
 }

@@ -23,7 +23,7 @@ async function main() {
 
     await mockERC20.approve(distributionExecutable.target, '1234567895')
 
-    console.log(`fantom contract address: ${distributionExecutable.target}`)
+    console.log(`ethereum contract address: ${distributionExecutable.target}`)
 }
 
 
