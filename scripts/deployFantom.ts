@@ -3,6 +3,7 @@ import chains from '../chains.json'
 import MockERC20 from '../artifacts/@openzeppelin/contracts/token/ERC20/IERC20.sol/IERC20.json'
 import { getWallet } from '../utils/getWallet'
 async function main() {
+    const approvalAmount = ethers.parseUnits('123', 'wei');
     const connectedWallet = getWallet(chains[1].rpc, ethers)
     const distributionExecutable = await ethers.deployContract('DistributionExecutable', [
         chains[1].gateway,
@@ -14,7 +15,7 @@ async function main() {
         connectedWallet
     )
     await distributionExecutable.waitForDeployment()
-    await mockERC20.approve(distributionExecutable.target, '1234567895')
+    await mockERC20.approve(distributionExecutable.target, approvalAmount.toString())
     console.log(`fantom contract address: ${distributionExecutable.target}`)
 }
 main().catch((error) => {
