@@ -91,9 +91,7 @@ task('sendToMany', 'Send tokens across chain using axelarjs')
 
     while (tx2Status.status == GMPStatus.CANNOT_FETCH_STATUS || GasPaidStatus.GAS_UNPAID) {
       tx2Status = await sdkGmpRecovery.queryTransactionStatus(tx2.hash)
-      console.log(tx2Status.gasPaidInfo?.status, 'status')
       if (tx2Status.gasPaidInfo?.status == GasPaidStatus.GAS_PAID_NOT_ENOUGH_GAS) {
-        console.log("inside if statement")
         const { success, transaction } = await sdkGmpRecovery.addNativeGas(
           EvmChain.POLYGON,
           tx2.hash,
@@ -114,9 +112,9 @@ const config: HardhatUserConfig = {
   solidity: '0.8.20',
   networks: {
     polygon: {
-      url: 'https://polygon-mumbai.g.alchemy.com/v2/Ksd4J1QVWaOJAJJNbr_nzTcJBJU-6uP3',
+      url: chains[0].rpc,
       accounts: { mnemonic: process.env.MNEMONIC },
-      chainId: 80001,
+      chainId: chains[0].chainId,
     },
     fantom: {
       url: chains[1].rpc,
