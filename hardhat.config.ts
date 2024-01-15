@@ -1,6 +1,8 @@
 import dotenv from 'dotenv'
 import { task, HardhatUserConfig } from 'hardhat/config'
 import '@nomicfoundation/hardhat-toolbox'
+import chains from './chains.json'
+
 
 dotenv.config()
 
@@ -19,14 +21,14 @@ const config: HardhatUserConfig = {
   solidity: '0.8.20',
   networks: {
     polygon: {
-      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.POLYGON_KEY}`,
+      url: chains[0].rpc,
       accounts: { mnemonic: process.env.MNEMONIC },
-      network_id: 80001,
+      chainId: chains[0].chainId,
     },
-    avalanche: {
-      url: `https://api.avax-test.network/ext/bc/C/rpc`,
+    fantom: {
+      url: chains[1].rpc,
       accounts: { mnemonic: process.env.MNEMONIC },
-      network_id: 4002,
+      chainId: chains[1].chainId,
     },
   },
 }
