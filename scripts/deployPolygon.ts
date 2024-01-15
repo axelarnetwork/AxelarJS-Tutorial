@@ -1,6 +1,7 @@
 import { ethers } from 'hardhat'
 import chains from '../chains.json'
 import MockERC20 from '../artifacts/@openzeppelin/contracts/token/ERC20/IERC20.sol/IERC20.json'
+
 import { getWallet } from '../utils/getWallet'
 async function main() {
     const approvalAmount = ethers.parseUnits('123', 'wei');
