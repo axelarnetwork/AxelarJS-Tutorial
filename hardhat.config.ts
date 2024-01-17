@@ -14,7 +14,7 @@ import {
   GMPStatus,
 } from '@axelar-network/axelarjs-sdk'
 
-//Comment this initially when compiling (to prevent error)
+//Comment the following import when initially compiling (to prevent error)
 import GMPDistribution from './artifacts/contracts/DistributionExecutable.sol/DistributionExecutable.json'
 
 dotenv.config()
@@ -25,7 +25,6 @@ const sdkGmpRecovery = new AxelarGMPRecoveryAPI({
   environment: Environment.TESTNET,
 })
 
-// npx hardhat sendToMany --sourcechainaddr 0x68474f4c8124ec22940Ca3a682C862C8447dA6b6 --destchainaddr 0x69aBe660cB7b4C5Bfb7c47Ff6B02d5294DA7Ce19
 task('sendToMany', 'Send tokens across chain using axelarjs')
   .addParam('sourcechainaddr', 'The source chain address')
   .addParam('destchainaddr', 'The destination chain address')
