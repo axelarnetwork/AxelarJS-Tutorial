@@ -11,7 +11,7 @@ async function main() {
         chains[0].gasService,
     ])
     const mockERC20 = new ethers.Contract(
-        chains[1].aUSDC,
+        chains[0].aUSDC,
         MockERC20.abi,
         connectedWallet
     )
