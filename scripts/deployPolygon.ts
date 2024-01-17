@@ -4,14 +4,14 @@ import MockERC20 from '../artifacts/@openzeppelin/contracts/token/ERC20/IERC20.s
 
 import { getWallet } from '../utils/getWallet'
 async function main() {
-    const approvalAmount = ethers.parseUnits('123', 'wei');
+    const approvalAmount = ethers.parseUnits('123', 'ether');
     const connectedWallet = getWallet(chains[0].rpc, ethers)
     const distributionExecutable = await ethers.deployContract('DistributionExecutable', [
         chains[0].gateway,
         chains[0].gasService,
     ])
     const mockERC20 = new ethers.Contract(
-        chains[1].aUSDC,
+        chains[0].aUSDC,
         MockERC20.abi,
         connectedWallet
     )

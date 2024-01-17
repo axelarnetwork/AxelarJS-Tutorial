@@ -13,6 +13,8 @@ import {
   GasPaidStatus,
   GMPStatus,
 } from '@axelar-network/axelarjs-sdk'
+
+//Comment this initially when compiling (to prevent error)
 import GMPDistribution from './artifacts/contracts/DistributionExecutable.sol/DistributionExecutable.json'
 
 dotenv.config()

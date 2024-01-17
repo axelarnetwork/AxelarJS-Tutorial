@@ -13,7 +13,7 @@ To deploy on Polygon run: `hh run scripts/deployPolygon.ts --network polygon`
 To deploy on Fantom run: `hh run scripts/deployFantom.ts --network fantom`
 
 
-If you do not want to go through the deployment process simply use the following addresses of the already deployed DistributionExecutable contract to use with the Hardhat Task
+If you do not want to go through the deployment process simply use the following addresses of the already deployed DistributionExecutable contract to use with the Hardhat Task. Though these will only work if you grant these contracts approval to spend tokens on your behalf.
 
 Polygon Address: `0x68474f4c8124ec22940ca3a682c862c8447da6b6`
 Fantom Address: `0x69aBe660cB7b4C5Bfb7c47Ff6B02d5294DA7Ce19`
