@@ -32,6 +32,7 @@ task('sendToMany', 'Send tokens across chain using axelarjs')
     console.log("Let's do this!")
     const connectedWallet = getWallet(chains[0].rpc, hre.ethers)
 
+
     const contract = new hre.ethers.Contract(
       taskArgs.sourcechainaddr,
       GMPDistribution.abi,
@@ -39,7 +40,7 @@ task('sendToMany', 'Send tokens across chain using axelarjs')
     )
 
     const estimatedGasAmount = await sdkQuery.estimateGasFee(
-      EvmChain.POLYGON,
+      EvmChain.CELO,
       EvmChain.FANTOM,
       GasToken.MATIC,
       700000,
@@ -62,6 +63,8 @@ task('sendToMany', 'Send tokens across chain using axelarjs')
 
 
     console.log('tx1.hash', tx1.hash)
+
+    console.log(contract.target, 'the contract')
 
     const tx2 = await contract.sendToMany(
       EvmChain.FANTOM,
@@ -90,7 +93,7 @@ task('sendToMany', 'Send tokens across chain using axelarjs')
       tx2Status = await sdkGmpRecovery.queryTransactionStatus(tx2.hash)
       if (tx2Status.gasPaidInfo?.status == GasPaidStatus.GAS_PAID_NOT_ENOUGH_GAS) {
         const { success, transaction } = await sdkGmpRecovery.addNativeGas(
-          EvmChain.POLYGON,
+          EvmChain.CELO,
           tx2.hash,
           gasOptions
         )
@@ -108,9 +111,9 @@ if (!process.env.MNEMONIC) throw 'mnemonic undefined'
 const config: HardhatUserConfig = {
   solidity: '0.8.20',
   networks: {
-    polygon: {
+    celo: {
       url: chains[0].rpc,
-      accounts: { mnemonic: process.env.MNEMONIC },
+      accounts: [`0x${process.env.PRIVATE_KEY}`],
       chainId: chains[0].chainId,
     },
     fantom: {
