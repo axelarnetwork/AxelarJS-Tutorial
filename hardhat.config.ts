@@ -19,7 +19,7 @@ if (!process.env.MNEMONIC) throw ('mnemonic undefined')
 const config: HardhatUserConfig = {
   solidity: '0.8.20',
   networks: {
-    polygon: {
+    celo: {
       url: chains[0].rpc,
       accounts: { mnemonic: process.env.MNEMONIC },
       chainId: chains[0].chainId,
