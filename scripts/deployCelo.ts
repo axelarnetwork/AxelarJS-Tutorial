@@ -17,7 +17,7 @@ async function main() {
     )
     await distributionExecutable.waitForDeployment()
     await mockERC20.approve(distributionExecutable.target, approvalAmount)
-    console.log(`polygon contract address: ${distributionExecutable.target}`)
+    console.log(`celo contract address: ${distributionExecutable.target}`)
 }
 main().catch((error) => {
     console.error(error)
