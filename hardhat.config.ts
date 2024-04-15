@@ -42,7 +42,7 @@ task('sendToMany', 'Send tokens across chain using axelarjs')
     const estimatedGasAmount = await sdkQuery.estimateGasFee(
       EvmChain.CELO,
       EvmChain.FANTOM,
-      GasToken.MATIC,
+      GasToken.CELO,
       700000,
       1.1,
       '500000'
